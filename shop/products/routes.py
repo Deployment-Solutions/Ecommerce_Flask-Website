@@ -8,19 +8,44 @@ import os
 
 @app.route('/')
 def home():
-    #page = request.args.get('page',1, type=int)
-    products = Addproduct.query.filter(Addproduct.stock > 0)
+    #How many pages are displayed on the Home Customer Page 
+    page = request.args.get('page',1, type=int)
+    products = Addproduct.query.filter(Addproduct.stock > 0).paginate(page=page, per_page=8)
+    '''
+    attach this to the end of 0) to have items displayed as most recently added first --> .order_by(Addproduct.id.desc())
+    '''
     barnds = Brand.query.join(Addproduct, (Brand.id == Addproduct.brand_id)).all()
+    categories = Category.query.join(Addproduct,(Category.id == Addproduct.category_id)).all()
     #.order_by(Addproduct.id.desc()).paginate(page=page, per_page=8)
-    return render_template('products/index.html', products=products,barnds=barnds)
+    return render_template('products/index.html', products=products,barnds=barnds, categories=categories)
+
+@app.route('/product/<int:id>')
+def single_page(id):
+    product = Addproduct.query.get_or_404(id)
+    barnds = Brand.query.join(Addproduct, (Brand.id == Addproduct.brand_id)).all()
+    categories = Category.query.join(Addproduct,(Category.id == Addproduct.category_id)).all()
+    return render_template('products/single_page.html',product=product, barnds=barnds,categories=categories)
+
 
 @app.route('/brand/<int:id>')
 def get_brand(id):
-    brand = Addproduct.query.filter_by(brand_id=id)
+    get_brand = Brand.query.filter_by(id=id).first_or_404()
+    page = request.args.get('page',1, type=int)
+    brand = Addproduct.query.filter_by(brand=get_brand).paginate(page=page, per_page=8)
     barnds = Brand.query.join(Addproduct, (Brand.id == Addproduct.brand_id)).all()
-    #page = request.args.get('page',1, type=int)
-    #get_brand = Brand.query.filter_by(id=id).first_or_404()
-    return render_template('products/index.html',brand=brand, barnds=barnds)
+    categories = Category.query.join(Addproduct,(Category.id == Addproduct.category_id)).all()
+    return render_template('products/index.html',brand=brand,get_brand=get_brand,barnds=barnds, categories= categories)
+
+
+@app.route('/categories/<int:id>')
+def get_category(id):
+    page = request.args.get('page',1, type=int)
+    get_cat = Category.query.filter_by(id=id).first_or_404()
+    #How Many pages to be Displayed in Category Page
+    get_cat_prod =Addproduct.query.filter_by(category=get_cat).paginate(page=page, per_page=8)
+    barnds = Brand.query.join(Addproduct, (Brand.id == Addproduct.brand_id)).all()
+    categories = Category.query.join(Addproduct,(Category.id == Addproduct.category_id)).all()
+    return render_template('products/index.html',get_cat_prod=get_cat_prod, categories=categories, barnds=barnds,get_cat=get_cat)
 
 
 @app.route('/addbrand', methods=['GET', 'POST'])
@@ -38,6 +63,8 @@ def addbrand():
 
     return render_template('products/addbrand.html', brands='brands')
 
+
+
 @app.route('/updatebrand/<int:id>',methods=['GET','POST'])
 def updatebrand(id):
     if 'email' not in session:
@@ -53,6 +80,8 @@ def updatebrand(id):
     brand = updatebrand.name
     return render_template('products/updatebrand.html', title='Update brand',brands='brands',updatebrand=updatebrand)
 
+
+
 @app.route('/deletebrand/<int:id>', methods=['GET','POST'])
 def deletebrand(id):
     brand = Brand.query.get_or_404(id)
@@ -63,6 +92,8 @@ def deletebrand(id):
         return redirect(url_for('admin'))
     flash(f"The brand {brand.name} can't be  deleted from your database","warning")
     return redirect(url_for('admin'))
+
+
 
 @app.route('/updatecat/<int:id>',methods=['GET','POST'])
 def updatecat(id):
@@ -79,6 +110,8 @@ def updatecat(id):
     category = updatecat.name
     return render_template('products/updatebrand.html', title='Update Category',updatecat=updatecat)
 
+
+
 @app.route('/addcat',methods=['GET','POST'])
 def addcat():
     if 'email' not in session: 
@@ -93,6 +126,8 @@ def addcat():
         return redirect(url_for('addcat'))
     return render_template('products/addbrand.html', title='Add category')
 
+
+
 @app.route('/deletecategory/<int:id>', methods=['GET','POST'])
 def deletecategory(id):
     category = Category.query.get_or_404(id)
@@ -103,6 +138,8 @@ def deletecategory(id):
         return redirect(url_for('admin'))
     flash(f"The brand {category.name} can't be  deleted from your database","warning")
     return redirect(url_for('admin'))
+
+
 
 @app.route('/addproduct', methods=['GET','POST'])
 def addproduct():
@@ -131,6 +168,8 @@ def addproduct():
         return redirect(url_for('admin'))
     return render_template('products/addproduct.html', form=form, title='Add a Product', brands=brands,categories=categories)
     
+
+
 @app.route('/updateproduct/<int:id>', methods=['GET','POST'])
 def updateproduct(id):
     form = Addproducts(request.form)
@@ -181,6 +220,8 @@ def updateproduct(id):
     brand = product.brand.name
     category = product.category.name
     return render_template('products/updateproduct.html', form=form, title='Update Product',product=product, brands=brands,categories=categories)
+
+
 
 @app.route('/deleteproduct/<int:id>', methods=['GET','POST'])
 def deleteproduct(id):
