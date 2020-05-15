@@ -5,6 +5,24 @@ from .forms import Addproducts
 import secrets
 import os
 
+
+@app.route('/')
+def home():
+    #page = request.args.get('page',1, type=int)
+    products = Addproduct.query.filter(Addproduct.stock > 0)
+    barnds = Brand.query.join(Addproduct, (Brand.id == Addproduct.brand_id)).all()
+    #.order_by(Addproduct.id.desc()).paginate(page=page, per_page=8)
+    return render_template('products/index.html', products=products,barnds=barnds)
+
+@app.route('/brand/<int:id>')
+def get_brand(id):
+    brand = Addproduct.query.filter_by(brand_id=id)
+    barnds = Brand.query.join(Addproduct, (Brand.id == Addproduct.brand_id)).all()
+    #page = request.args.get('page',1, type=int)
+    #get_brand = Brand.query.filter_by(id=id).first_or_404()
+    return render_template('products/index.html',brand=brand, barnds=barnds)
+
+
 @app.route('/addbrand', methods=['GET', 'POST'])
 def addbrand():
     if 'email' not in session: 
@@ -112,7 +130,7 @@ def addproduct():
         db.session.commit()
         return redirect(url_for('admin'))
     return render_template('products/addproduct.html', form=form, title='Add a Product', brands=brands,categories=categories)
-
+    
 @app.route('/updateproduct/<int:id>', methods=['GET','POST'])
 def updateproduct(id):
     form = Addproducts(request.form)
