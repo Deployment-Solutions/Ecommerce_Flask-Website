@@ -4,8 +4,6 @@ from flask_wtf import FlaskForm
 from .model import Register
 
 
-
-
 class CustomerRegisterForm(FlaskForm):
     name = StringField('Name: ')
     username = StringField('Username: ', [validators.DataRequired()])
@@ -28,8 +26,6 @@ class CustomerRegisterForm(FlaskForm):
     def validate_email(self, email):
         if Register.query.filter_by(email=email.data).first():
             raise ValidationError("This email address is already in use!")
-
-    
 
 
 class CustomerLoginFrom(FlaskForm):
