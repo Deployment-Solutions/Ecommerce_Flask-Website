@@ -1,14 +1,15 @@
 from shop import db
 from datetime import datetime
 
+
 class Addproduct(db.Model):
-    #__seachbale__ = ['name','desc']
+    __seachbale__ = ['name','desc']
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     price = db.Column(db.Numeric(10,2), nullable=False)
     discount = db.Column(db.Integer, default=0)
     stock = db.Column(db.Integer, nullable=False)
-    colour = db.Column(db.Text, nullable=False)
+    colors = db.Column(db.Text, nullable=False)
     desc = db.Column(db.Text, nullable=False)
     pub_date = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)
 
@@ -25,13 +26,21 @@ class Addproduct(db.Model):
     def __repr__(self):
         return '<Post %r>' % self.name
 
-class Brand(db.Model): 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(30), nullable=False, unique=True)
 
-class Category(db.Model): 
+class Brand(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(30), nullable=False, unique=True)
+    name = db.Column(db.String(30), unique=True, nullable=False)
+
+    def __repr__(self):
+        return '<Brand %r>' % self.name
+    
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30), unique=True, nullable=False)
+
+    def __repr__(self):
+        return '<Catgory %r>' % self.name
 
 
 db.create_all()
