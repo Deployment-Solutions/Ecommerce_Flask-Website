@@ -82,17 +82,23 @@
 										</div>
 
 									</div>
-								</div>
+								</div> 
 
 								<div id="checkOut">
+								<div class="text">
+										<a href="{{url_for('getCart')}}" class="text"> Cart ({{ session['Shoppingcart']|length }}) </a>
+									</div>
 
 									<div class="basket_icon">
+
+						
 									</div>
 
 									<div class="cost_breakdown">
 									</div>
 
 									<div class="basket_cont">
+										
 
 										<div class="basket_item">
 											<div class="bi_img">
