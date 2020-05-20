@@ -43,7 +43,7 @@ def AddCart():
 @app.route('/carts')
 def getCart():
     if 'Shoppingcart' not in session or len(session['Shoppingcart']) <= 0:
-        return redirect(url_for('home'))
+        return redirect(url_for('store'))
     subtotal = 0
     grandtotal = 0
     for key,product in session['Shoppingcart'].items():
@@ -57,7 +57,7 @@ def getCart():
 @app.route('/cart2')
 def getCart2():
     if 'Shoppingcart' not in session or len(session['Shoppingcart']) <= 0:
-        return redirect(url_for('home'))
+        return redirect(url_for('store'))
     subtotal = 0
     grandtotal = 0
     for key,product in session['Shoppingcart'].items():
@@ -73,7 +73,7 @@ def getCart2():
 @app.route('/updatecart/<int:code>', methods=['POST'])
 def updatecart(code):
     if 'Shoppingcart' not in session or len(session['Shoppingcart']) <= 0:
-        return redirect(url_for('home'))
+        return redirect(url_for('store'))
     if request.method =="POST":
         quantity = request.form.get('quantity')
         color = request.form.get('color')
