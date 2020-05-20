@@ -52,7 +52,7 @@ def getCart():
         subtotal -= discount
         tax =("%.2f" %(.06 * float(subtotal)))
         grandtotal = float("%.2f" % (1.06 * subtotal))
-    return render_template('products/cart.html',tax=tax, grandtotal=grandtotal,brands=brands(),categories=categories())
+    return render_template('cart.html',tax=tax, grandtotal=grandtotal,brands=brands(),categories=categories())
 
 @app.route('/cart2')
 def getCart2():
@@ -94,7 +94,7 @@ def updatecart(code):
 @app.route('/deleteitem/<int:id>')
 def deleteitem(id):
     if 'Shoppingcart' not in session or len(session['Shoppingcart']) <= 0:
-        return redirect(url_for('home'))
+        return redirect(url_for('store'))
     try:
         session.modified = True
         for key , item in session['Shoppingcart'].items():
@@ -110,6 +110,6 @@ def deleteitem(id):
 def clearcart():
     try:
         session.pop('Shoppingcart', None)
-        return redirect(url_for('home'))
+        return redirect(url_for('store'))
     except Exception as e:
         print(e)
