@@ -1,0 +1,235 @@
+{% extends "layout_store.html" %}
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='profile.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='post grid.css') }}">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="parallax.js/parallax.min.js"></script>
+
+<body>
+				<div id="body_cont">
+		
+					<div id="shop_main_cont">
+						
+						<div id="shop_cont" >
+
+							<div id="shop_top"></div>
+
+
+							<div id="shop_menu_bar">
+
+							</div>
+
+							
+							<div id="shop_sections">
+
+								<div id="categories">
+										
+									<div class="catetitle"> </div>
+									<div id="items_cont">
+
+										<div id="catOptions" >
+												
+										</div>
+
+									</div>
+								
+								</div>
+
+
+								<div id="item_section">
+									<div class="categorie_title"> </div>
+									<div id="items_cont">
+
+										<div id="items" >
+											
+											{% for product in products %}
+
+											<form  method="POST" class="itm_form">
+
+												<div class="item">
+													<div class="itm_img_cont"><img src="{{url_for('static', filename='images/'+product.image_1 )}}" alt="{{product.name}}" class="itm_img"></div>
+													<div class="item_name">{{product.name}}</div>
+													<!--- Product Discount Displayed---->
+													{% if product.discount > 0 %}
+													<div class="text" style="text-align:center;">Discount {{product.discount}}%</div>
+													<strike class="text-lg-center" >£{{product.price}}</strike>
+													{% set discount =(product.discount/100) * product.price|float %}
+													{% set subtotal = product.price|float %}
+													<p style="color:red; text-align:center;" >SALE £{{"%.2f"|format(subtotal - discount|round(1,'floor')) }}</p>
+													{% else %}
+													<div class="text" style="text-align:center;" >£{{product.price}}</div>
+													<!--- End Product Discount Displayed---->
+													{% endif %}								
+												</div>
+
+											</form>
+												{% endfor %}
+
+
+
+
+											<div class="item" id="item">
+												<div class="itm_img_cont"></div>
+
+												<div class="itm_info"></div>
+											</div>
+											
+										</div>
+
+									</div>
+								</div>
+
+								<div id="checkOut">
+
+									<div class="basket_icon">
+									</div>
+
+									<div class="cost_breakdown">
+									</div>
+
+									<div class="basket_cont">
+
+										<div class="basket_item">
+											<div class="bi_img">
+
+											</div>
+
+										</div>
+
+									</div>
+
+									<div class="cost_breakdown">
+										<div class="checkout_btn"> 
+												COMPLETE ORDER
+										</div>
+									</div>
+
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+</div>
+
+
+
+<script src="post_grid.js" type="text/javascript"></script>
+<script src="paralax.js"></script>
+
+<script type="text/javascript">
+	////////////////ON BUTTON CLICK, CHANGE//////...
+var content = document.getElementById("checkOut");
+var content2 = document.getElementById("item_section");
+
+var button = document.getElementById("checkOut");
+			button.onclick = function(){
+			if(content.className== "open"){
+			content.className = "" ;
+			content2.className = "" ;
+
+			}else{
+			content.className = "open";
+			content2.className = "open" ;
+			}
+
+			};
+
+////////////////////////SIGN UP FORM///////////////////////////
+var sign_up_form_cont = document.getElementById("sign_up_form_cont");
+var sign_up_form = document.getElementById("sign_up_form");
+var sign_up_btn = document.getElementById("sign_up_btn");
+
+		sign_up_btn.onclick = function(){
+
+			if(sign_up_form.className== "open"){
+			sign_up_form.className = "";
+			sign_up_form_cont.className = ""
+
+			}else{
+			sign_up_form.className = "open"
+			sign_up_form_cont.className = "open";
+			}
+
+			};
+
+/////////////////////////////////////////////////////////////
+var sign_up_form_cont = document.getElementById("sign_up_form_cont");
+</script>
+
+
+<script type="text/javascript">
+
+////////////////ON BUTTON CLICK, OPEN ITEM VIEWER //////...
+	var itm_content = document.getElementById("more_info");
+	var itm_button = document.getElementById("item");
+	
+	
+				itm_button.onclick = function(){
+				if(itm_content.className== "iopen"){
+				itm_content.className = "" ;
+	
+				}else{
+					itm_content.className = "iopen";
+				}
+	
+				};
+</script>
+
+<script type="text/javascript">
+
+	////////////////ON BUTTON CLICK, OPEN ITEM VIEWER //////...
+	var itm_v_content = document.getElementById("more_info");
+	var itm_v_button = document.getElementById("item_view_cont");
+	
+				itm_v_button.onclick = function(){
+				if(itm_v_content.className== "iopen"){
+				itm_v_content.className = "" ;
+	
+				}else{
+					itm_v_content.className = "";
+				}
+	
+				};
+</script>
+
+
+
+<script>
+	document.querySelectorAll('.item').forEach(item => {
+  	item.addEventListener('click', event => {
+    //handle click
+
+	// OPEN ITEM VIEWER ON CLICK //
+
+
+	var itm_content = document.getElementById("more_info");	
+				if(itm_content.className== "iopen"){
+				itm_content.className = "" ;
+	
+				}else{
+					itm_content.className = "iopen";
+				};
+ 		 })
+	})
+
+</script>
+
+<script>
+	var x = document.getElementsByClassName("item");
+	x[0].submit(); // Form submission
+</script>
+
+{% endblock content %}
+

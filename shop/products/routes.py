@@ -6,6 +6,41 @@ import secrets
 import os
 
 
+@app.route('/',methods =['GET' , 'POST'])
+@app.route('/landing',methods =['GET' , 'POST'])
+def landing():
+	return render_template('landing.html', title='layout' )
+	
+@app.route('/test')
+def test():
+    product = Addproduct.query.get_or_404(5)
+    return render_template('test.html' , product=product)
+
+
+@app.route('/layout',methods =['GET' , 'POST'])
+def layout():
+    product = Addproduct.query.get_or_404(6)
+    return render_template('layout.html', title='layout', product=product)
+
+@app.route('/layout_store',methods =['GET' , 'POST'])
+def layout_store():
+    product = Addproduct.query.get_or_404(6)
+    return render_template('layout_store.html', title='layout', product=product)
+
+@app.route('/store',methods =['GET' , 'POST'])
+def store():
+    page = request.args.get('page',1, type=int)
+    products = Addproduct.query.filter(Addproduct.stock > 0).order_by(Addproduct.id.desc()).paginate(page=page, per_page=8)
+    products = Addproduct.query.filter(Addproduct.stock > 0)
+    brands = Brand.query.join(Addproduct, (Brand.id == Addproduct.brand_id)).all()
+    
+    product = Addproduct.query.get_or_404(3)
+    return render_template('store.html', title='layout', products=products, brands=brands, product=product)
+
+
+
+
+
 def brands():
     brands = Brand.query.join(Addproduct, (Brand.id == Addproduct.brand_id)).all()
     return brands
@@ -16,11 +51,13 @@ def categories():
 
 
 
-@app.route('/')
+@app.route('/home')
 def home():
     page = request.args.get('page',1, type=int)
     products = Addproduct.query.filter(Addproduct.stock > 0).order_by(Addproduct.id.desc()).paginate(page=page, per_page=8)
-    return render_template('products/index.html', products=products,brands=brands(),categories=categories())
+    product = Addproduct.query.get_or_404(1)
+
+    return render_template('products/index.html', products=products,brands=brands(),categories=categories(), product=product)
 
 @app.route('/result')
 def result():
