@@ -96,11 +96,11 @@
 											
 											{% for product in products %}
 
-											<form  method="POST" class="itm_form">
+											<form  method="POST" class="itm_form" id="{{product.id}}" name="{{item_display}}">
 
 												<div class="item">
 													<div class="itm_img_cont"><img src="{{url_for('static', filename='images/'+product.image_1 )}}" alt="{{product.name}}" class="itm_img"></div>
-													<div class="item_name">{{product.name}}</div>
+													<div class="item_name">{{product.id}}</div>
 													<!--- Product Discount Displayed---->
 													{% if product.discount > 0 %}
 													<div class="text" style="text-align:center;">Discount {{product.discount}}%</div>
@@ -146,6 +146,7 @@
 									</div>
 
 									<div class="basket_cont">
+									
 										<table class="table table-sm">
 											<thead>
 												<th>Name</th>
