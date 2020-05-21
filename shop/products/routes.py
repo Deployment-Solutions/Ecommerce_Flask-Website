@@ -6,6 +6,62 @@ import secrets
 import os
 
 
+#################### Functions to Add to STORE page ####################
+def brands():
+    brands = Brand.query.join(Addproduct, (Brand.id == Addproduct.brand_id)).all()
+    return brands
+
+def categories():
+    categories = Category.query.join(Addproduct,(Category.id == Addproduct.category_id)).all()
+    return categories
+
+def AddCart():
+    try:
+        product_id = request.form.get('product_id')
+        quantity = int(request.form.get('quantity'))
+        color = request.form.get('colors')
+        product = Addproduct.query.filter_by(id=product_id).first()
+
+        if request.method =="POST":
+            DictItems = {product_id:{'name':product.name,'price':float(product.price),'discount':product.discount,'color':color,'quantity':quantity,'image':product.image_1, 'colors':product.colors}}
+            if 'Shoppingcart' in session:
+                print(session['Shoppingcart'])
+                if product_id in session['Shoppingcart']:
+                    for key, item in session['Shoppingcart'].items():
+                        if int(key) == int(product_id):
+                            session.modified = True
+                            item['quantity'] += 1
+                else:
+                    session['Shoppingcart'] = MagerDicts(session['Shoppingcart'], DictItems)
+                    return redirect(request.referrer)
+            else:
+                session['Shoppingcart'] = DictItems
+                return redirect(request.referrer)    
+    except Exception as e:
+        print(e)
+    finally:
+        return redirect(request.referrer)
+
+def MagerDicts(dict1,dict2):
+    if isinstance(dict1, list) and isinstance(dict2,list): 
+        return dict1  + dict2
+    if isinstance(dict1, dict) and isinstance(dict2, dict):
+        return dict(list(dict1.items()) + list(dict2.items()))
+
+def grandtotal ():
+    if 'Shoppingcart' not in session or len(session['Shoppingcart']) <= 0:
+        return redirect(url_for('store'))
+    subtotal = 0
+    grandtotal = 0
+    for key,product in session['Shoppingcart'].items():
+        discount = (product['discount']/100) * float(product['price'])
+        subtotal += float(product['price']) * int(product['quantity'])
+        subtotal -= discount
+        grandtotal = float("%.2f" % (1.06 * subtotal))
+    return grandtotal 
+
+#################### Functions to Add to STORE page ####################
+
 @app.route('/',methods =['GET' , 'POST'])
 @app.route('/landing',methods =['GET' , 'POST'])
 def landing():
@@ -32,23 +88,8 @@ def store():
     page = request.args.get('page',1, type=int)
     products = Addproduct.query.filter(Addproduct.stock > 0).order_by(Addproduct.id.desc()).paginate(page=page, per_page=8)
     products = Addproduct.query.filter(Addproduct.stock > 0)
-    brands = Brand.query.join(Addproduct, (Brand.id == Addproduct.brand_id)).all()
-    
-    product = Addproduct.query.get_or_404(3)
-    return render_template('store.html', title='layout', products=products, brands=brands, product=product)
-
-
-
-
-
-def brands():
-    brands = Brand.query.join(Addproduct, (Brand.id == Addproduct.brand_id)).all()
-    return brands
-
-def categories():
-    categories = Category.query.join(Addproduct,(Category.id == Addproduct.category_id)).all()
-    return categories
-
+    product = Addproduct.query.get_or_404(2)
+    return render_template('store.html', title='layout', products=products, brands=brands(), product=product, categories=categories(), grandtotal=grandtotal(), AddCart=AddCart() ) 
 
 
 @app.route('/home')
@@ -70,9 +111,6 @@ def single_page(id):
     product = Addproduct.query.get_or_404(id)
     return render_template('products/single_page.html',product=product,brands=brands(),categories=categories())
 
-
-
-
 @app.route('/brand/<int:id>')
 def get_brand(id):
     page = request.args.get('page',1, type=int)
@@ -85,7 +123,7 @@ def get_brand(id):
 def get_category(id):
     page = request.args.get('page',1, type=int)
     get_cat = Category.query.filter_by(id=id).first_or_404()
-    get_cat_prod = Addproduct.query.filter_by(category=get_cat).paginate(page=page, per_page=8)
+    get_cat_prod = Addproduct.query.filter_by(category=get_cat).paginate(page=page, per_page=8) 
     return render_template('products/index.html',get_cat_prod=get_cat_prod,brands=brands(),categories=categories(),get_cat=get_cat)
 
 

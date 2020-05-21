@@ -33,6 +33,53 @@
 									<div id="items_cont">
 
 										<div id="catOptions" >
+										
+										<li class="list-group" >
+										<strong class="list-group-title ">All Products</strong>
+										<ul class="menu" role="menu">
+
+											<li style="list-style-type: none;">
+														<div> <a class="link " href="#" role="menuitem"> View All</a> </div>
+											</li>
+										</ul>
+
+								<!----------------- The List Of Brands -------------------->
+										<li class="list-group" >
+											<strong class="list-group-title ">Brands</strong>
+											<ul class="menu" role="menu">
+
+												<li style="list-style-type: none;">
+													{% for brand in brands %}
+															<div> <a class="link " href="#" role="menuitem">{{brand.name}}</a> </div>
+													{% endfor %}
+												</li>
+											</ul>
+
+									<!----------------- The List Of Categories  -------------------->
+										<li class="list-group" >
+											<strong class="list-group-title ">Categories</strong>
+											<ul class="menu" role="menu">
+
+												<li style="list-style-type: none;">
+													{% for category in categories %}
+															<div> <a class="link " href="#" role="menuitem">{{category.name}}</a> </div>
+													{% endfor %}
+												</li>
+											</ul> 
+
+								
+													</ul>
+												</li>
+											</ul> 
+										</nav>
+								<!----------------- END The List Of Brands -------------------->
+								<li class="list-group" >
+										<strong class="list-group-title" style="color:red;" >Sale Items</strong>
+										<ul class="menu" role="menu">
+											<li style="list-style-type: none;">
+													<div> <a class="link " href="#" role="menuitem"> View All</a> </div>
+											</li>
+										</ul>
 												
 										</div>
 
@@ -95,10 +142,40 @@
 									</div>
 
 									<div class="cost_breakdown">
+									 <h5>Grand total: £{{grandtotal}}</h3> 
 									</div>
 
 									<div class="basket_cont">
-										
+										<table class="table table-sm">
+											<thead>
+												<th>Name</th>
+												<th>Image</th>
+												<th>Price</th>
+												<th>Quantity</th>
+												<th>Update</th>
+												<th>Delete</th>
+											</thead> 
+										 
+										  <tbody>
+											{% for key, product in session['Shoppingcart'].items() %}
+											{% set discount =(product.discount/100) * product.price|float %}
+											<tr>
+												<td>{{product.name}}</td>
+												<form action="{{url_for('updatecart', code=key)}}" method="post">
+												
+													<td><img src="{{url_for('static',filename='images/'+ product.image)}}" alt="{{product.name}}" width="50" height="45"></td>
+												
+
+											<!---- Calulating Product Discount  ------>
+											<td>£{{"%.2f"|format(product.price)}}</td>
+											<td> <input type="number" name="quantity" min="1" max="10" value="{{product.quantity}}"> </td>
+											<td><button type="submit" class="btn btn-sm btn-info">Update</button> </td>
+										</form>
+											<td> <a href="{{url_for('deleteitem', id=key)}}" class="btn btn-sm btn-danger">Delete</a></td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
 
 										<div class="basket_item">
 											<div class="bi_img">
@@ -111,8 +188,7 @@
 
 									<div class="cost_breakdown">
 										<div class="checkout_btn"> 
-												COMPLETE ORDER
-										</div>
+											<a href="{{url_for('getCart')}}" > COMPLETE ORDER </a> 
 									</div>
 
 								</div>
