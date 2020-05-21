@@ -57,7 +57,7 @@ def grandtotal ():
         discount = (product['discount']/100) * float(product['price'])
         subtotal += float(product['price']) * int(product['quantity'])
         subtotal -= discount
-        grandtotal = float("%.2f" % (1.06 * subtotal))
+        grandtotal = float("%.2f" % (1.06 * subtotal)) 
     return grandtotal 
 
 #################### Functions to Add to STORE page ####################
@@ -106,8 +106,9 @@ def home():
 @app.route('/result')
 def result():
     searchword = request.args.get('q')
+    product = Addproduct.query.get_or_404(1)
     products = Addproduct.query.msearch(searchword, fields=['name','desc'] , limit=6)
-    return render_template('products/result.html',products=products,brands=brands(),categories=categories())
+    return render_template('store.html',products=products,brands=brands(),categories=categories(),product=product)
 
 @app.route('/product/<int:id>')
 def single_page(id):

@@ -33,13 +33,17 @@
 									<div id="items_cont">
 
 										<div id="catOptions" >
+
+										<form class="form-inline my-2 my-lg-0" action="{{url_for('result')}}">
+											<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q">
+										</form> 
 										
 										<li class="list-group" >
 										<strong class="list-group-title ">All Products</strong>
 										<ul class="menu" role="menu">
 
 											<li style="list-style-type: none;">
-														<div> <a class="link " href="#" role="menuitem"> View All</a> </div>
+														<div> <a class="link " href="{{url_for('store')}}" role="menuitem"> View All</a> </div>
 											</li>
 										</ul>
 
@@ -132,8 +136,9 @@
 								</div> 
 
 								<div id="checkOut">
+
 								<div class="text">
-										<a href="{{url_for('getCart')}}" class="text"> Cart ({{ session['Shoppingcart']|length }}) </a>
+										{#<a href="{{url_for('getCart')}}" class="text"> Cart ({{ session['Shoppingcart']|length }}) </a>#}
 									</div>
 
 									<div class="basket_icon">
@@ -142,12 +147,12 @@
 									</div>
 
 									<div class="cost_breakdown">
+									
+									{#{% if session['Shoppingcart']|length == 0 %}
+									<h5>Grand total: £0</h3>#}
 
-									{% if session['Shoppingcart']|length == 0 %}
-									<h5>Grand total: £0</h3>
-									{% else %}
 									 <h5>Grand total: £{{grandtotal}}</h3>
-									 {% endif %} 
+									 {# {% endif %} #}
 									</div>
 
 									<div class="basket_cont">
@@ -163,13 +168,13 @@
 											</thead> 
 										 
 										  <tbody>
-											{% for key, product in session['Shoppingcart'].items() %}
+											{#{% for key, product in session['Shoppingcart'].items() %}#}
 											{% set discount =(product.discount/100) * product.price|float %}
 											<tr>
 												<td>{{product.name}}</td>
-												<form action="{{url_for('updatecart', code=key)}}" method="post">
+												{#<form action="{{url_for('updatecart', code=key)}}" method="post">#}
 												
-													<td><img src="{{url_for('static',filename='images/'+ product.image)}}" alt="{{product.name}}" width="50" height="45"></td>
+													{#<td><img src="{{url_for('static',filename='images/'+ product.image)}}" alt="{{product.name}}" width="50" height="45"></td>#}
 												
 
 											<!---- Calulating Product Discount  ------>
@@ -177,9 +182,9 @@
 											<td> <input type="number" name="quantity" min="1" max="10" value="{{product.quantity}}"> </td>
 											<td><button type="submit" class="btn btn-sm btn-info">Update</button> </td>
 										</form>
-											<td> <a href="{{url_for('deleteitem', id=key)}}" class="btn btn-sm btn-danger">Delete</a></td>
+											{#<td> <a href="{{url_for('deleteitem', id=key)}}" class="btn btn-sm btn-danger">Delete</a></td>#}
 										</tr>
-										{% endfor %}
+										{#{% endfor %}#}
 									</tbody>
 								</table>
 
