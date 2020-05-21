@@ -100,7 +100,7 @@
 
 												<div class="item">
 													<div class="itm_img_cont"><img src="{{url_for('static', filename='images/'+product.image_1 )}}" alt="{{product.name}}" class="itm_img"></div>
-													<div class="item_name">{{product.id}}</div>
+													<div class="item_name">{{product.name}}</div>
 													<!--- Product Discount Displayed---->
 													{% if product.discount > 0 %}
 													<div class="text" style="text-align:center;">Discount {{product.discount}}%</div>
@@ -142,7 +142,12 @@
 									</div>
 
 									<div class="cost_breakdown">
-									 <h5>Grand total: £{{grandtotal}}</h3> 
+
+									{% if session['Shoppingcart']|length == 0 %}
+									<h5>Grand total: £0</h3>
+									{% else %}
+									 <h5>Grand total: £{{grandtotal}}</h3>
+									 {% endif %} 
 									</div>
 
 									<div class="basket_cont">
@@ -154,7 +159,7 @@
 												<th>Price</th>
 												<th>Quantity</th>
 												<th>Update</th>
-												<th>Delete</th>
+												<th>Delete</th>  
 											</thead> 
 										 
 										  <tbody>
@@ -177,13 +182,6 @@
 										{% endfor %}
 									</tbody>
 								</table>
-
-										<div class="basket_item">
-											<div class="bi_img">
-
-											</div>
-
-										</div>
 
 									</div>
 

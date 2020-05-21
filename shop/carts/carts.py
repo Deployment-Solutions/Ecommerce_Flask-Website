@@ -84,10 +84,10 @@ def updatecart(code):
                     item['quantity'] = quantity
                     item['color'] = color
                     flash('Item is updated!')
-                    return redirect(url_for('getCart'))
+                    return redirect(url_for('store'))
         except Exception as e:
             print(e)
-            return redirect(url_for('getCart'))
+            return redirect(url_for('store'))
 
 
 
@@ -100,10 +100,10 @@ def deleteitem(id):
         for key , item in session['Shoppingcart'].items():
             if int(key) == id:
                 session['Shoppingcart'].pop(key, None)
-                return redirect(url_for('getCart'))
+                return redirect(url_for('store'))
     except Exception as e:
         print(e)
-        return redirect(url_for('getCart'))
+        return redirect(url_for('store'))
 
 
 @app.route('/clearcart')

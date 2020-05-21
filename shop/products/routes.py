@@ -83,12 +83,12 @@ def layout_store():
     product = Addproduct.query.get_or_404(6)
     return render_template('layout_store.html', title='layout', product=product)
 
-@app.route('/store/<int:id>',methods =['GET' , 'POST'])
-def store(id):
+@app.route('/store/',methods =['GET' , 'POST'])
+def store():
     page = request.args.get('page',1, type=int)
     products = Addproduct.query.filter(Addproduct.stock > 0).order_by(Addproduct.id.desc()).paginate(page=page, per_page=8)
     products = Addproduct.query.filter(Addproduct.stock > 0)
-    product = Addproduct.query.get_or_404(id)
+    product = Addproduct.query.get_or_404(1)
     # if form.validate_on_submit():
     # if form validate on submit: 
     #     product = Addproduct.query.get_or_404(id)
