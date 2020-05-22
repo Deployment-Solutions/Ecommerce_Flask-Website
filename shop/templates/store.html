@@ -37,7 +37,7 @@
 										<form class="form-inline my-2 my-lg-0" action="{{url_for('result')}}">
 											<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q">
 										</form> 
-										<br>
+										
 										<li class="list-group" >
 										<strong class="list-group-title ">All Products</strong>
 										<ul class="menu" role="menu">
@@ -99,9 +99,9 @@
 										<div id="items" >
 											
 											{% for product in products %}
-
+											
 											<form  method="POST" class="itm_form" id="{{product.id}}" name="{{item_display}}">
-
+												
 												<div class="item">
 													<div class="itm_img_cont"><img src="{{url_for('static', filename='images/'+product.image_1 )}}" alt="{{product.name}}" class="itm_img"></div>
 													<div class="item_name">{{product.name}}</div>
@@ -117,7 +117,7 @@
 													<!--- End Product Discount Displayed---->
 													{% endif %}								
 												</div>
-
+												
 											</form>
 												{% endfor %}
 
@@ -140,16 +140,13 @@
 								<div class="text">
 								{% if session['Shoppingcart']|length == 0 %}
 									<p>Cart (0)</p>
-									
-
 								{% elif session['Shoppingcart']|length > 0 %}
-										<p>Cart ({{ session['Shoppingcart']|length }})</p>
+										<p>Cart (Cart ({{ session['Shoppingcart']|length }}))</p>
 								{% endif %}
 									</div>
 
 									<div class="basket_icon">
 
-						
 									</div>
 
 									<div class="cost_breakdown">
@@ -165,7 +162,8 @@
 									<div class="basket_cont">
 									
 										<table class="table table-sm">
-											<thead>
+
+											<thead> 
 												<th>Name</th>
 												<th>Image</th>
 												<th>Price</th>
@@ -267,23 +265,6 @@ var sign_up_form_cont = document.getElementById("sign_up_form_cont");
 </script>
 
 
-<script type="text/javascript">
-
-////////////////ON BUTTON CLICK, OPEN ITEM VIEWER //////...
-	var itm_content = document.getElementById("more_info");
-	var itm_button = document.getElementById("item");
-	
-	
-				itm_button.onclick = function(){
-				if(itm_content.className== "iopen"){
-				itm_content.className = "" ;
-	
-				}else{
-					itm_content.className = "iopen";
-				}
-	
-				};
-</script>
 
 <script type="text/javascript">
 
@@ -300,34 +281,9 @@ var sign_up_form_cont = document.getElementById("sign_up_form_cont");
 				}
 	
 				};
-</script>
+</script> 
 
 
-
-<script>
-	document.querySelectorAll('.item').forEach(item => {
-  	item.addEventListener('click', event => {
-    //handle click
-
-	// OPEN ITEM VIEWER ON CLICK //
-
-
-	var itm_content = document.getElementById("more_info");	
-				if(itm_content.className== "iopen"){
-				itm_content.className = "" ;
-	
-				}else{
-					itm_content.className = "iopen";
-				};
- 		 })
-	})
-
-</script>
-
-<script>
-	var x = document.getElementsByClassName("item");
-	x[0].submit(); // Form submission
-</script>
 
 {% endblock content %}
 

@@ -15,6 +15,10 @@ def categories():
     categories = Category.query.join(Addproduct,(Category.id == Addproduct.category_id)).all()
     return categories
 
+def single_page(id):
+    product = Addproduct.query.get_or_404(id)
+    return single_page(id)
+
 def AddCart():
     try:
         product_id = request.form.get('product_id')
@@ -85,10 +89,14 @@ def layout_store():
 
 @app.route('/store/',methods =['GET' , 'POST'])
 def store():
+
     page = request.args.get('page',1, type=int)
     products = Addproduct.query.filter(Addproduct.stock > 0).order_by(Addproduct.id.desc()).paginate(page=page, per_page=8)
     products = Addproduct.query.filter(Addproduct.stock > 0)
-    product = Addproduct.query.get_or_404(1)
+    # id = request.form.get('product_id')
+    product = Addproduct.query.get(1)
+    
+    # product = Addproduct.query.filter_by(id=product_id).first()
     # if form.validate_on_submit():
     # if form validate on submit: 
     #     product = Addproduct.query.get_or_404(id)
@@ -108,7 +116,7 @@ def result():
     searchword = request.args.get('q')
     product = Addproduct.query.get_or_404(1)
     products = Addproduct.query.msearch(searchword, fields=['name','desc'] , limit=6)
-    return render_template('store.html',products=products,brands=brands(),categories=categories(),product=product)
+    return render_template('products/result.html',products=products,brands=brands(),categories=categories(),product=product)
 
 @app.route('/product/<int:id>')
 def single_page(id):
